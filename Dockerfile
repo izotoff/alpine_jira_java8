@@ -4,7 +4,7 @@ FROM alpine
 MAINTAINER Anastas Dancha <anapsix@random.io>
 RUN echo http://mirror.yandex.ru/mirrors/alpine/v3.2/main > /etc/apk/repositories
 # Install cURL
-RUN apk --update add bash curl ca-certificates && \
+RUN apk --update add bash openssl curl ca-certificates && \
     curl -Ls https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk > /tmp/glibc-2.21-r2.apk && \
     apk add --allow-untrusted /tmp/glibc-2.21-r2.apk
 
@@ -46,7 +46,10 @@ ENV PATH ${PATH}:${JAVA_HOME}/bin
 ENV JIRA_VERSION atlassian-jira-6.4.11
 ENV JIRA_HOME /var/atlassian/jira
 
-ADD ${JIRA_VERSION}.tar.gz /var/
+# Two 
+RUN wget -O - https://www.atlassian.com/software/jira/downloads/binary/${JIRA_VERSION}.tar.gz | tar -xzC /var/
+#append this if want to rename: && mv ${JIRA_VERSION}-standalone atlassian
+#ADD ${JIRA_VERSION}.tar.gz /var/
 
 #RUN chown -R atlassian1 /var/atlassian/
 RUN mkdir  /var/atlassian
